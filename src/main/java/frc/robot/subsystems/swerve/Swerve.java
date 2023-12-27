@@ -20,12 +20,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.hardware.NavX;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision;
+import frc.robot.subsystems.vision.GamePieceVision;
 import frc.robot.utilities.logging.Loggable;
 
 public class Swerve extends SubsystemBase implements Loggable {
     private static Swerve instance;
-
     public static synchronized Swerve getInstance() {
         if (instance == null) instance = new Swerve();
         return instance;
@@ -35,7 +35,8 @@ public class Swerve extends SubsystemBase implements Loggable {
     private SwerveDriveKinematics kinematics;
     private SwerveDriveOdometry odometry;
     private NavX gyro;
-    private Vision vision;
+	private AprilTagVision tagVision;
+	private GamePieceVision pieceVision;
     private PIDController anglePID;
     private Rotation2d targetAngle;
     private DriveMode driveMode;
@@ -68,13 +69,14 @@ public class Swerve extends SubsystemBase implements Loggable {
 			),
 		};
 		gyro = new NavX(I2C.Port.kMXP);
-		vision = Vision.getInstance();
+		tagVision = AprilTagVision.getInstance();
+		pieceVision = GamePieceVision.getInstance();
 		kinematics = new SwerveDriveKinematics(getModuleTranslations());
 		odometry = new SwerveDriveOdometry(
 			kinematics,
 			gyro.getUnwrappedAngle(),
 			getModulePositions(),
-			vision.getRobotPose(new Pose2d())
+			tagVision.getRobotPose(new Pose2d())
 		);
         driveMode = DriveMode.AngleCentric;
         Shuffleboard.getTab("Display").addBoolean(
@@ -138,7 +140,7 @@ public class Swerve extends SubsystemBase implements Loggable {
     public Command moveToTagCommand(Pose2d relativeTargetPose) {
         return Commands.run(
 			() -> {
-				Pose2d poseDif = vision.getRelativeTagPose(relativeTargetPose).relativeTo(relativeTargetPose);
+				Pose2d poseDif = tagVision.getRelativeTagPose(relativeTargetPose).relativeTo(relativeTargetPose);
 				driveRobotCentric(
                     new ChassisSpeeds(
 						poseDif.getX() * 2,
@@ -222,7 +224,7 @@ public class Swerve extends SubsystemBase implements Loggable {
 					0, 
 					getRobotAngle()
 				).vxMetersPerSecond, 
-				vision.getHorizontalOffset(new Rotation2d()).getDegrees() / 10,
+				pieceVision.getHorizontalOffset(new Rotation2d()).getDegrees() / 10,
 				calculateRotationalVelocityToTarget(aligningAngle)
 			)
 		);
@@ -233,7 +235,7 @@ public class Swerve extends SubsystemBase implements Loggable {
         Rotation2d gyroAngle = gyro.getUnwrappedAngle();
 		SwerveModulePosition[] modulePositions = getModulePositions();
 		odometry.update(gyroAngle, modulePositions);
-		if (vision.seesTag()) resetPose(vision.getRobotPose(getRobotPose()));
+		if (tagVision.seesTag()) resetPose(tagVision.getRobotPose(getRobotPose()));
     }
 
     @Override
@@ -302,7 +304,7 @@ public class Swerve extends SubsystemBase implements Loggable {
     }
 
     public void offsetGyro(Rotation2d offset) {
-        gyro.zeroGyroWithOffset(offset);
+        gyro.offsetGyro(offset);
     }
 
     private double calculateRotationalVelocityToTarget(Rotation2d targetRotation) {

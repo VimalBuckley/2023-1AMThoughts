@@ -69,7 +69,7 @@ public class NavX {
 		gyroZero = new Rotation2d();
 	}
 
-	public void zeroGyroWithOffset(Rotation2d offset) {
+	public void offsetGyro(Rotation2d offset) {
 		gyroZero = ExtendedMath.wrapRotation2d(getAngle().minus(offset));
 	}
 
