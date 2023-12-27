@@ -1,7 +1,7 @@
 package frc.robot.utilities.logging;
 
 import frc.robot.subsystems.messaging.MessagingSystem;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.Vision;
 import java.util.TimerTask;
 
@@ -11,7 +11,7 @@ public class LogSubsystemInputsTask extends TimerTask {
 	private LogInputs loggingHelper = LogInputs.getInstance();
 	private Loggable[] loggingTargets = {
 		// TODO: Add things to log here
-		SwerveDrive.getInstance(),
+		Swerve.getInstance(),
 		Vision.getInstance(),
 		MessagingSystem.getInstance()
 	};

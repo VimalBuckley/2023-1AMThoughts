@@ -12,12 +12,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.messaging.MessagingSystem;
-import frc.robot.subsystems.swerve.SwerveDrive;
-import frc.robot.subsystems.swerve.TeleopDriveCommand;
+import frc.robot.subsystems.swerve.Swerve;
 
 public class RobotContainer {
 	private CommandXboxController xbox;
-	private SwerveDrive swerve;
+	private Swerve swerve;
 	private MessagingSystem messaging;
 	private Command autoCommand;
 	private SendableChooser<Command> autonChooser;
@@ -26,7 +25,7 @@ public class RobotContainer {
 
 	public RobotContainer() {
         DriverStation.silenceJoystickConnectionWarning(true);
-		swerve = SwerveDrive.getInstance();
+		swerve = Swerve.getInstance();
 		messaging = MessagingSystem.getInstance();
 		setupAuto();
 		setupDriveController();
@@ -43,19 +42,18 @@ public class RobotContainer {
 
 	public void setupDriveController() {
 		xbox = new CommandXboxController(DRIVER_PORT);
-		TeleopDriveCommand swerveCommand = new TeleopDriveCommand(xbox);
-		swerve.setDefaultCommand(swerveCommand);
-
+		swerve.setDefaultCommand(swerve.followControllerCommand(xbox));
+		
 		Trigger switchDriveModeButton = xbox.x();
 		Trigger resetGyroButton = xbox.a();
 		Trigger alignToTargetButton = xbox.rightBumper();
 		Trigger cancelationButton = xbox.start();
 		Trigger moveToAprilTagButton = xbox.leftBumper();
 
-        moveToAprilTagButton.whileTrue(swerve.driveToTagCommand(new Pose2d(1, 0, new Rotation2d())));
-        switchDriveModeButton.onTrue(swerveCommand.toggleRobotCentricCommand());
-		resetGyroButton.onTrue(swerveCommand.resetGyroCommand());
-		alignToTargetButton.whileTrue(swerveCommand.toggleAlignToAngleCommand());
+        moveToAprilTagButton.whileTrue(swerve.moveToTagCommand(new Pose2d(1, 0, new Rotation2d())));
+        switchDriveModeButton.onTrue(swerve.toggleRobotCentricCommand());
+		resetGyroButton.onTrue(swerve.resetGyroCommand());
+		alignToTargetButton.whileTrue(swerve.toggleAlignToTargetCommand());
 		cancelationButton.onTrue(Commands.runOnce(
 			() -> CommandScheduler.getInstance().cancelAll())
 		);
