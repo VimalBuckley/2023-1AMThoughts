@@ -11,13 +11,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.messaging.MessagingSystem;
+import frc.robot.subsystems.messaging.Messaging;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class RobotContainer {
 	private CommandXboxController xbox;
 	private Swerve swerve;
-	private MessagingSystem messaging;
+	private Messaging messaging;
 	private Command autoCommand;
 	private SendableChooser<Command> autonChooser;
 
@@ -26,7 +26,7 @@ public class RobotContainer {
 	public RobotContainer() {
         DriverStation.silenceJoystickConnectionWarning(true);
 		swerve = Swerve.getInstance();
-		messaging = MessagingSystem.getInstance();
+		messaging = Messaging.getInstance();
 		setupAuto();
 		setupDriveController();
 	}
@@ -67,7 +67,7 @@ public class RobotContainer {
 	}
 
 	public void autonomousInit() {
-		messaging.setMessagingState(true);
+		messaging.enableMessaging(true);
 		messaging.addMessage("Auto Started");
 		autoCommand = autonChooser.getSelected();
 		if (autoCommand != null) {
@@ -78,7 +78,7 @@ public class RobotContainer {
 	}
 
 	public void teleopInit() {
-		messaging.setMessagingState(true);
+		messaging.enableMessaging(true);
 		messaging.addMessage("Teleop Started");
 		if (autoCommand != null) {
 			autoCommand.cancel();

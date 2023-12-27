@@ -1,6 +1,6 @@
 package frc.robot.utilities.logging;
 
-import frc.robot.subsystems.messaging.MessagingSystem;
+import frc.robot.subsystems.messaging.Messaging;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTagVision;
 import frc.robot.subsystems.vision.GamePieceVision;
@@ -15,7 +15,7 @@ public class LogSubsystemInputsTask extends TimerTask {
 		Swerve.getInstance(),
 		GamePieceVision.getInstance(),
 		AprilTagVision.getInstance(),
-		MessagingSystem.getInstance()
+		Messaging.getInstance()
 	};
 
 	@Override
