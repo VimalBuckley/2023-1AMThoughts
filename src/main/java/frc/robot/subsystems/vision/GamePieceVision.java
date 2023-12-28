@@ -8,15 +8,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.hardware.Limelight;
-import frc.robot.utilities.logging.Loggable;
 
-public class GamePieceVision extends SubsystemBase implements Loggable{
+public class GamePieceVision extends SubsystemBase {
     private static GamePieceVision instance;
     public static synchronized GamePieceVision getInstance() {
         if (instance == null) instance = new GamePieceVision();
         return instance;
     }
 
+    // TODO: Change these!
     private final double LIMELIGHT_HEIGHT_METERS = 0.232;
 	private final double GAMEPIECE_HALF_HEIGHT_METERS = 0.16;
 	private final Rotation2d LIMELIGHT_ANGLE = Rotation2d.fromDegrees(-12);
@@ -60,17 +60,11 @@ public class GamePieceVision extends SubsystemBase implements Loggable{
         return limelight.getTargetArea().orElse(defaultArea);
     }
 
-    @Override
     public void logData(LogTable table) {
         table.put("Sees Piece", seesPiece());
         Logger.getInstance().recordOutput(
             "Piece Translation", 
             new Pose2d(getTranslation(new Translation2d()), new Rotation2d())
         );
-    }
-
-    @Override
-    public String getTableName() {
-        return "Gamepiece Vision";
     }
 }

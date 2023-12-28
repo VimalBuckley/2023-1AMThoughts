@@ -3,9 +3,8 @@ package frc.robot.subsystems.messaging;
 import org.littletonrobotics.junction.LogTable;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utilities.logging.Loggable;
 
-public class Messaging extends SubsystemBase implements Loggable {
+public class Messaging extends SubsystemBase {
     private static Messaging instance;
     public static synchronized Messaging getInstance() {
         if (instance == null) instance = new Messaging();
@@ -28,15 +27,7 @@ public class Messaging extends SubsystemBase implements Loggable {
         enabled = enable;
     }    
 
-    @Override
     public void logData(LogTable table) {
-        table.put("Messages", messages.toString());
-        
+        table.put("Messages", messages.toString());   
     }
-
-    @Override
-    public String getTableName() {
-        return "Messaging";
-    }
-    
 }

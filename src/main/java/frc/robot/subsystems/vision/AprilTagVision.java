@@ -11,9 +11,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.hardware.Limelight;
 import frc.robot.utilities.ExtendedMath;
-import frc.robot.utilities.logging.Loggable;
 
-public class AprilTagVision extends SubsystemBase implements Loggable{
+public class AprilTagVision extends SubsystemBase {
     private static AprilTagVision instance;
     public static synchronized AprilTagVision getInstance() {
         if (instance == null) instance = new AprilTagVision();
@@ -116,7 +115,6 @@ public class AprilTagVision extends SubsystemBase implements Loggable{
         return new Pose2d(tagTranslation, tagRotation);  
     }
 
-    @Override
     public void logData(LogTable table) {
         table.put("Tag ID", getTagId(0));
         table.put("Sees tag", seesTag());
@@ -128,10 +126,5 @@ public class AprilTagVision extends SubsystemBase implements Loggable{
             "Relative Tag Pose",
             getRelativeTagPose(new Pose2d())
         );
-    }
-
-    @Override
-    public String getTableName() {
-        return "AprilTag Vision";
     }
 }

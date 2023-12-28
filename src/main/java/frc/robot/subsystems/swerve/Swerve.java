@@ -22,9 +22,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.hardware.NavX;
 import frc.robot.subsystems.vision.AprilTagVision;
 import frc.robot.subsystems.vision.GamePieceVision;
-import frc.robot.utilities.logging.Loggable;
 
-public class Swerve extends SubsystemBase implements Loggable {
+public class Swerve extends SubsystemBase {
     private static Swerve instance;
     public static synchronized Swerve getInstance() {
         if (instance == null) instance = new Swerve();
@@ -238,7 +237,6 @@ public class Swerve extends SubsystemBase implements Loggable {
 		if (tagVision.seesTag()) resetPose(tagVision.getRobotPose(getRobotPose()));
     }
 
-    @Override
 	public void logData(LogTable table) {
 		table.put(
 			"Front Left Module Velocity (M/S)",
@@ -280,11 +278,6 @@ public class Swerve extends SubsystemBase implements Loggable {
 			"Module States", 
 			getModuleStates()
 		);
-	}
-
-	@Override
-	public String getTableName() {
-		return "Swerve";
 	}
 
     public Pose2d getRobotPose() {

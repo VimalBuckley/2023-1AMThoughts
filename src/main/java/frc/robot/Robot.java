@@ -2,7 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.utilities.logging.LogSubsystemInputsTask;
+import frc.robot.utilities.LoggingTask;
 
 import java.util.Timer;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -42,7 +42,7 @@ public class Robot extends LoggedRobot {
 
 		logger.start();
 		robotContainer = new RobotContainer();
-		timer.schedule(new LogSubsystemInputsTask(), 10, 20);
+		timer.schedule(new LoggingTask(), 10, 20);
 	}
 
 	@Override
