@@ -2,6 +2,7 @@ package frc.robot.subsystems.vision;
 
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.hardware.Limelight;
 import frc.robot.utilities.ExtendedMath;
 
-public class AprilTagVision extends SubsystemBase {
+public class AprilTagVision extends SubsystemBase implements LoggableInputs {
     private static AprilTagVision instance;
     public static synchronized AprilTagVision getInstance() {
         if (instance == null) instance = new AprilTagVision();
@@ -115,7 +116,8 @@ public class AprilTagVision extends SubsystemBase {
         return new Pose2d(tagTranslation, tagRotation);  
     }
 
-    public void logData(LogTable table) {
+    @Override
+    public void toLog(LogTable table) {
         table.put("Tag ID", getTagId(0));
         table.put("Sees tag", seesTag());
         Logger.getInstance().recordOutput(
@@ -127,4 +129,7 @@ public class AprilTagVision extends SubsystemBase {
             getRelativeTagPose(new Pose2d())
         );
     }
+
+    @Override
+    public void fromLog(LogTable table) {}
 }

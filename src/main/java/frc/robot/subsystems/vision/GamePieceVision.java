@@ -2,6 +2,7 @@ package frc.robot.subsystems.vision;
 
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,7 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.hardware.Limelight;
 
-public class GamePieceVision extends SubsystemBase {
+public class GamePieceVision extends SubsystemBase implements LoggableInputs {
     private static GamePieceVision instance;
     public static synchronized GamePieceVision getInstance() {
         if (instance == null) instance = new GamePieceVision();
@@ -60,11 +61,15 @@ public class GamePieceVision extends SubsystemBase {
         return limelight.getTargetArea().orElse(defaultArea);
     }
 
-    public void logData(LogTable table) {
+    @Override
+    public void toLog(LogTable table) {
         table.put("Sees Piece", seesPiece());
         Logger.getInstance().recordOutput(
             "Piece Translation", 
             new Pose2d(getTranslation(new Translation2d()), new Rotation2d())
         );
     }
+
+    @Override
+    public void fromLog(LogTable table) {}
 }

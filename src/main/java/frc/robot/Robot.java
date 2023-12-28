@@ -2,9 +2,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.utilities.LoggingTask;
+import frc.robot.subsystems.messaging.Messaging;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.vision.AprilTagVision;
+import frc.robot.subsystems.vision.GamePieceVision;
 
 import java.util.Timer;
+import java.util.TimerTask;
+
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggedPowerDistribution;
@@ -42,7 +47,19 @@ public class Robot extends LoggedRobot {
 
 		logger.start();
 		robotContainer = new RobotContainer();
-		timer.schedule(new LoggingTask(), 10, 20);
+		timer.schedule(
+			new TimerTask() {
+				public void run() {
+					// TODO: Change these!
+					logger.processInputs("Swerve", Swerve.getInstance());
+					logger.processInputs("Gamepiece Vision", GamePieceVision.getInstance());
+					logger.processInputs("Apriltag Vision", AprilTagVision.getInstance());
+					logger.processInputs("Messaging", Messaging.getInstance());
+				}
+			}, 
+			10, 
+			20
+		);
 	}
 
 	@Override

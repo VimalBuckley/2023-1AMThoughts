@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -23,7 +24,7 @@ import frc.robot.hardware.NavX;
 import frc.robot.subsystems.vision.AprilTagVision;
 import frc.robot.subsystems.vision.GamePieceVision;
 
-public class Swerve extends SubsystemBase {
+public class Swerve extends SubsystemBase implements LoggableInputs {
     private static Swerve instance;
     public static synchronized Swerve getInstance() {
         if (instance == null) instance = new Swerve();
@@ -237,7 +238,8 @@ public class Swerve extends SubsystemBase {
 		if (tagVision.seesTag()) resetPose(tagVision.getRobotPose(getRobotPose()));
     }
 
-	public void logData(LogTable table) {
+	@Override
+	public void toLog(LogTable table) {
 		table.put(
 			"Front Left Module Velocity (M/S)",
 			modules[0].getModuleState().speedMetersPerSecond
@@ -279,6 +281,9 @@ public class Swerve extends SubsystemBase {
 			getModuleStates()
 		);
 	}
+
+	@Override
+	public void fromLog(LogTable table) {}
 
     public Pose2d getRobotPose() {
         return odometry.getPoseMeters();
