@@ -9,23 +9,31 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.messaging.Messaging;
+import frc.robot.subsystems.placer.Placer;
+import frc.robot.subsystems.placer.Placer.GamePiece;
+import frc.robot.subsystems.placer.Placer.PlacerPosition;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class RobotContainer {
 	private CommandXboxController xbox;
+	private CommandJoystick flightSim;
 	private Swerve swerve;
+	private Placer placer;
 	private Messaging messaging;
 	private Command autoCommand;
 	private SendableChooser<Command> autonChooser;
 
 	private final int DRIVER_PORT = 2;
+	private final int OPERATOR_PORT = 1;
 
 	public RobotContainer() {
         DriverStation.silenceJoystickConnectionWarning(true);
 		swerve = Swerve.getInstance();
+		placer = Placer.getInstance();
 		messaging = Messaging.getInstance();
 		setupAuto();
 		setupDriveController();
@@ -57,6 +65,31 @@ public class RobotContainer {
 		cancelationButton.onTrue(Commands.runOnce(
 			() -> CommandScheduler.getInstance().cancelAll())
 		);
+	}
+
+	public void setupOperatorController() {
+		flightSim = new CommandJoystick(OPERATOR_PORT);
+
+		Trigger placeButton = flightSim.button(1);
+		Trigger intakeConeButton = flightSim.button(6);	
+		Trigger intakeCubeButton = flightSim.button(12);
+		Trigger goBottomButton = flightSim.button(9);
+		Trigger goMiddleButton = flightSim.button(7);
+		Trigger goTopButton = flightSim.button(8);
+		Trigger goSubstationButton = flightSim.button(10);
+		Trigger goZeroButton = flightSim.button(2);
+
+		placeButton.onTrue(placer.setPlacerState(GamePiece.None))
+			.onFalse(placer.setPlacerState(PlacerPosition.TeleopZero, GamePiece.None));
+		intakeConeButton.onTrue(placer.setPlacerState(GamePiece.Cone))
+			.onFalse(placer.setPlacerState(PlacerPosition.TeleopZero));
+		intakeCubeButton.onTrue(placer.setPlacerState(GamePiece.Cube))
+			.onFalse(placer.setPlacerState(PlacerPosition.TeleopZero));
+		goBottomButton.onTrue(placer.setPlacerState(PlacerPosition.Bottom));
+		goMiddleButton.onTrue(placer.setPlacerState(PlacerPosition.Middle));
+		goTopButton.onTrue(placer.setPlacerState(PlacerPosition.Top));
+		goSubstationButton.onTrue(placer.setPlacerState(PlacerPosition.Substation));
+		goZeroButton.onTrue(placer.setPlacerState(PlacerPosition.TeleopZero));
 	}
 
 	public Command rumbleCommand(double timeSeconds) {

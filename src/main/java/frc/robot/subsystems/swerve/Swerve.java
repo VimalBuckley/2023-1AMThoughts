@@ -148,8 +148,7 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
 						-poseDif.getRotation().getRadians() * 5
 					)
 				);
-			},
-			this
+			}, this
 		);
     }
 

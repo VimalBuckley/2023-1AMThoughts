@@ -62,7 +62,7 @@ public class NavX {
 
 	/** Interval: [-pi, pi] */
 	public Rotation2d getGyroZero() {
-		return gyroZero;
+		return ExtendedMath.wrapRotation2d(gyroZero);
 	}
 
 	public void zeroGyro() {
