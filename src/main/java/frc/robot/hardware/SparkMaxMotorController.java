@@ -7,8 +7,11 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.util.Units;
 
 public class SparkMaxMotorController extends CANSparkMax implements EncodedMotorController {
+	private double angleTolerance;
+
 	public SparkMaxMotorController(int deviceID, MotorType type) {
 		super(deviceID, type);
+		angleTolerance = 0;
 	}
 
     @Override
@@ -18,6 +21,9 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 
     @Override
 	public void setAngle(double position) {
+		if (Math.abs(position - getAngleRadians())  < angleTolerance) {
+			position = getAngleRadians();
+		} 
 		getPIDController()
 			.setReference(Units.radiansToRotations(position), ControlType.kPosition);
 	}
@@ -110,7 +116,7 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 
 	@Override
 	public EncodedMotorController setAngleTolerance(double tolerance) {
-		// Not possible on a spark max
+		angleTolerance = tolerance;
 		return this;
 	}
 }
