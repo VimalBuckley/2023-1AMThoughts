@@ -11,7 +11,7 @@ import frc.robot.hardware.SparkMaxMotorController;
 import frc.robot.hardware.TalonSRXMotorController;
 
 public class Placer extends SubsystemBase {
-    public static Placer instance;
+    private static Placer instance;
     public static synchronized Placer getInstance() {
         if (instance == null) instance = new Placer();
         return instance;
@@ -21,8 +21,12 @@ public class Placer extends SubsystemBase {
     private EncodedMotorController armAngleMotor;
     private EncodedMotorController intakeAngleMotor;
     private EncodedMotorController intakeRunMotor;
+    private GamePiece currentGamePiece;
+    private PlacerPosition currentPlacerPosition;
 
     public Placer() {
+        currentGamePiece = GamePiece.Cone;
+        currentPlacerPosition = PlacerPosition.AutoZero;
         armExtensionMotor = new TalonSRXMotorController(15);
         armAngleMotor = new SparkMaxMotorController(10, MotorType.kBrushless);
         intakeAngleMotor = new SparkMaxMotorController(12, MotorType.kBrushless);
@@ -47,32 +51,55 @@ public class Placer extends SubsystemBase {
         intakeRunMotor.setBrakeOnIdle(true);
     }
 
-    public Command setPlacerPosition(PlacerState targetState) {
+    public Command setPlacerState(PlacerPosition nextPlacerState, GamePiece nextGamePiece) {
         return Commands.runOnce(
-          () -> {
-            armExtensionMotor.setAngle(targetState.armExtension);
-            armAngleMotor.setAngle(targetState.armAngle);
-            intakeAngleMotor.setAngle(targetState.intakeAngle);
-          }, this  
-        ).until(
             () -> {
-                double armExtension = Math.abs(armExtensionMotor.getAngleRadians());
-                double armAngle = Math.abs(armAngleMotor.getAngleRadians());
-                double intakeAngle = Math.abs(intakeAngleMotor.getAngleRadians());
-                return armExtension < 1
-                    && armAngle < 1
-                    && intakeAngle < 1;
-            }
-        );
+                setPlacerPosition(nextPlacerState);
+                setPlacerOutput(nextGamePiece);
+            }, this
+        ).andThen(Commands.waitUntil(
+            this::atTargetState
+        ));
     }
 
-    public Command setPlacerOutput(PlacerOutput targetOutput) {
-        return Commands.runOnce(
-            () -> intakeRunMotor.setOutput(targetOutput.intakeSpeed)  
-        );
+    public Command setPlacerState(PlacerPosition nextPlacerState) {
+        return setPlacerState(nextPlacerState, currentGamePiece);
     }
 
-    public static enum PlacerState {
+    public Command setPlacerState(GamePiece nextGamePiece) {
+        return setPlacerState(currentPlacerPosition, nextGamePiece);
+    }
+
+    private void setPlacerOutput(GamePiece nextGamePiece) {
+        GamePiece current = currentGamePiece;
+        GamePiece next = nextGamePiece;
+        if (current == next || (current != GamePiece.None && next != GamePiece.None)) {
+            intakeRunMotor.setOutput(0);
+        } else {
+            intakeRunMotor.setOutput(
+                next == GamePiece.None ? current.outtakeSpeed : next.intakeSpeed
+            );
+            currentGamePiece = next;
+        }
+    }
+
+    private void setPlacerPosition(PlacerPosition nextPlacerPosition) {
+        armExtensionMotor.setAngle(nextPlacerPosition.armExtension);
+        armAngleMotor.setAngle(nextPlacerPosition.armAngle);
+        intakeAngleMotor.setAngle(nextPlacerPosition.intakeAngle);
+        currentPlacerPosition = nextPlacerPosition;
+    }
+
+    private boolean atTargetState() {
+        double armExtension = armExtensionMotor.getAngleRadians();
+        double armAngle = armAngleMotor.getAngleRadians();
+        double intakeAngle = intakeAngleMotor.getAngleRadians();
+        return Math.abs(armExtension - currentPlacerPosition.armExtension )< 1
+            && Math.abs(armAngle - currentPlacerPosition.armAngle) < 1
+            && Math.abs(intakeAngle - currentPlacerPosition.intakeAngle) < 1; 
+    }
+
+    public static enum PlacerPosition {
         AutoZero,
         TeleopZero,
         Bottom,
@@ -85,13 +112,12 @@ public class Placer extends SubsystemBase {
         public double intakeAngle;
     }
 
-    public static enum PlacerOutput {
-        Off,
-        PickupCone,
-        PlaceCone,
-        PickupCube,
-        PlaceCube;
+    public static enum GamePiece {
+        None,
+        Cube,
+        Cone;
 
-        double intakeSpeed;
+        public double intakeSpeed;
+        public double outtakeSpeed;
     }
 }
