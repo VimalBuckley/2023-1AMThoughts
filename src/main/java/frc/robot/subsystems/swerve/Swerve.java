@@ -148,8 +148,7 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
 						-poseDif.getRotation().getRadians() * 5
 					)
 				);
-			},
-			this
+			}, this
 		);
     }
 
@@ -302,7 +301,7 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
     }
 
     public void offsetGyro(Rotation2d offset) {
-        gyro.offsetGyro(offset);
+        gyro.zeroGyroWithOffset(offset);
     }
 
     private double calculateRotationalVelocityToTarget(Rotation2d targetRotation) {

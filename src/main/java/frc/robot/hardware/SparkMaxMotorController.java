@@ -94,7 +94,7 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 
 	@Override
 	public EncodedMotorController setInversion(boolean shouldInvert) {
-		super.setInverted(shouldInvert);
+		setInverted(shouldInvert);
 		return this;
 	}
 
