@@ -9,8 +9,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.hardware.EncodedMotorController;
 import frc.robot.hardware.SparkMaxMotorController;
 import frc.robot.hardware.TalonSRXMotorController;
+import static frc.robot.subsystems.placer.PlacerConstants.*;
 
-public class Placer extends SubsystemBase {
+import org.littletonrobotics.junction.LogTable;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
+
+public class Placer extends SubsystemBase implements LoggableInputs {
     private static Placer instance;
     public static synchronized Placer getInstance() {
         if (instance == null) instance = new Placer();
@@ -76,6 +80,18 @@ public class Placer extends SubsystemBase {
         ).andThen(Commands.waitUntil(this::atTargetState));
     }
 
+    @Override
+    public void toLog(LogTable table) {
+        table.put("Target Game Piece", currentGamePiece.name());
+        table.put("Target Placer Position", currentPlacerPosition.name());
+        table.put("Current Arm Extension", armExtensionMotor.getAngleRadians());
+        table.put("Current Arm Angle", armAngleMotor.getAngleRadians());
+        table.put("Current Intake Intake", intakeAngleMotor.getAngleRadians());
+    }
+
+    @Override
+    public void fromLog(LogTable table) {}
+
     private void setPlacerOutput(PlacerOutput output) {
         switch (output) {
             default:
@@ -83,11 +99,11 @@ public class Placer extends SubsystemBase {
                 intakeRunMotor.setOutput(0);
                 break;
             case PickupCone:
-                intakeRunMotor.setOutput(GamePiece.Cone.intakeSpeed);
+                intakeRunMotor.setOutput(GamePiece.Cone.intakeOutput);
                 currentGamePiece = GamePiece.Cone;
                 break;
             case PickupCube:
-                intakeRunMotor.setOutput(GamePiece.Cube.intakeSpeed);
+                intakeRunMotor.setOutput(GamePiece.Cube.intakeOutput);
                 currentGamePiece = GamePiece.Cube;
                 break;
             case Place:
@@ -114,16 +130,22 @@ public class Placer extends SubsystemBase {
     }
 
     public static enum PlacerPosition {
-        AutoZero,
-        TeleopZero,
-        Bottom,
-        Middle,
-        Top,
-        Substation;
+        AutoZero(AUTO_ZERO_ARM_EXTENSION, AUTO_ZERO_ARM_ANGLE, AUTO_ZERO_INTAKE_ANGLE),
+        TeleopZero(TELEOP_ZERO_ARM_EXTENSION, TELEOP_ZERO_ARM_ANGLE, TELEOP_ZERO_INTAKE_ANGLE),
+        Bottom(BOTTOM_ARM_EXTENSION, BOTTOM_ARM_ANGLE, BOTTOM_INTAKE_ANGLE),
+        Middle(MIDDLE_ARM_EXTENSION, MIDDLE_ARM_ANGLE, MIDDLE_INTAKE_ANGLE),
+        Top(TOP_ARM_EXTENSION, TOP_ARM_ANGLE, TOP_INTAKE_ANGLE),
+        Substation(SUBSTATION_ARM_EXTENSION, SUBSATION_ARM_ANGLE, SUBSTATION_INTAKE_ANGLE);
 
         public double armExtension;
         public double armAngle;
         public double intakeAngle;
+
+        private PlacerPosition(double armExtension, double armAngle, double intakeAngle) {
+            this.armExtension = armExtension;
+            this.armAngle = armAngle;
+            this.intakeAngle = intakeAngle;
+        }
     }
 
     public static enum PlacerOutput {
@@ -134,11 +156,16 @@ public class Placer extends SubsystemBase {
     }
 
     public static enum GamePiece {
-        None,
-        Cube,
-        Cone;
+        None(0, 0),
+        Cube(CUBE_INTAKE_OUTPUT, CUBE_PLACE_OUTPUT),
+        Cone(CONE_INTAKE_OUTPUT, CONE_PLACE_OUTPUT);
 
-        public double intakeSpeed;
+        public double intakeOutput;
         public double placeOutput;
+
+        private GamePiece(double intakeOutput, double placeOutput) {
+            this.intakeOutput = intakeOutput;
+            this.placeOutput = placeOutput;
+        }
     }
 }

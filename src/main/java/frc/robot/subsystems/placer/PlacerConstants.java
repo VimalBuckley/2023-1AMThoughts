@@ -26,8 +26,8 @@ public class PlacerConstants {
     public static final double TELEOP_ZERO_INTAKE_ANGLE = 0;
 
     public static final double CONE_INTAKE_OUTPUT = 0;
-    public static final double CONE_OUTTAKE_OUTPUT = 0;
+    public static final double CONE_PLACE_OUTPUT = 0;
 
     public static final double CUBE_INTAKE_OUTPUT = 0;
-    public static final double CUBE_OUTTAKE_OUTPUT = 0;
+    public static final double CUBE_PLACE_OUTPUT = 0;
 }
