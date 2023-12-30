@@ -51,35 +51,49 @@ public class Placer extends SubsystemBase {
         intakeRunMotor.setBrakeOnIdle(true);
     }
 
-    public Command setPlacerState(PlacerPosition nextPlacerState, GamePiece nextGamePiece) {
-        return Commands.runOnce(
+    public Command runPlacerCommand(PlacerOutput output) {
+        return Commands.startEnd(
+            () -> setPlacerOutput(output),
+            () -> setPlacerOutput(PlacerOutput.Off)
+        );
+    }
+
+    public Command runPlacerAndZeroCommand(PlacerOutput output) {
+        return Commands.startEnd(
+            () -> setPlacerOutput(output),
             () -> {
-                setPlacerPosition(nextPlacerState);
-                setPlacerOutput(nextGamePiece);
-            }, this
-        ).andThen(Commands.waitUntil(
-            this::atTargetState
-        ));
+                setPlacerOutput(PlacerOutput.Off);
+                setPlacerPosition(PlacerPosition.TeleopZero);
+            },
+            this  
+        );
     }
 
-    public Command setPlacerState(PlacerPosition nextPlacerState) {
-        return setPlacerState(nextPlacerState, currentGamePiece);
+    public Command movePlacerCommand(PlacerPosition position) {
+        return Commands.runOnce(
+            () -> setPlacerPosition(position), 
+            this
+        ).andThen(Commands.waitUntil(this::atTargetState));
     }
 
-    public Command setPlacerState(GamePiece nextGamePiece) {
-        return setPlacerState(currentPlacerPosition, nextGamePiece);
-    }
-
-    private void setPlacerOutput(GamePiece nextGamePiece) {
-        GamePiece current = currentGamePiece;
-        GamePiece next = nextGamePiece;
-        if (current == next || (current != GamePiece.None && next != GamePiece.None)) {
-            intakeRunMotor.setOutput(0);
-        } else {
-            intakeRunMotor.setOutput(
-                next == GamePiece.None ? current.outtakeSpeed : next.intakeSpeed
-            );
-            currentGamePiece = next;
+    private void setPlacerOutput(PlacerOutput output) {
+        switch (output) {
+            default:
+            case Off:
+                intakeRunMotor.setOutput(0);
+                break;
+            case PickupCone:
+                intakeRunMotor.setOutput(GamePiece.Cone.intakeSpeed);
+                currentGamePiece = GamePiece.Cone;
+                break;
+            case PickupCube:
+                intakeRunMotor.setOutput(GamePiece.Cube.intakeSpeed);
+                currentGamePiece = GamePiece.Cube;
+                break;
+            case Place:
+                intakeRunMotor.setOutput(currentGamePiece.placeOutput);
+                currentGamePiece = GamePiece.None;
+                break;
         }
     }
 
@@ -112,12 +126,19 @@ public class Placer extends SubsystemBase {
         public double intakeAngle;
     }
 
+    public static enum PlacerOutput {
+        Place,
+        PickupCone,
+        PickupCube,
+        Off
+    }
+
     public static enum GamePiece {
         None,
         Cube,
         Cone;
 
         public double intakeSpeed;
-        public double outtakeSpeed;
+        public double placeOutput;
     }
 }

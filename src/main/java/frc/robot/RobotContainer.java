@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.messaging.Messaging;
 import frc.robot.subsystems.placer.Placer;
-import frc.robot.subsystems.placer.Placer.GamePiece;
+import frc.robot.subsystems.placer.Placer.PlacerOutput;
 import frc.robot.subsystems.placer.Placer.PlacerPosition;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -79,17 +79,14 @@ public class RobotContainer {
 		Trigger goSubstationButton = flightSim.button(10);
 		Trigger goZeroButton = flightSim.button(2);
 
-		placeButton.onTrue(placer.setPlacerState(GamePiece.None))
-			.onFalse(placer.setPlacerState(PlacerPosition.TeleopZero, GamePiece.None));
-		intakeConeButton.onTrue(placer.setPlacerState(GamePiece.Cone))
-			.onFalse(placer.setPlacerState(PlacerPosition.TeleopZero));
-		intakeCubeButton.onTrue(placer.setPlacerState(GamePiece.Cube))
-			.onFalse(placer.setPlacerState(PlacerPosition.TeleopZero));
-		goBottomButton.onTrue(placer.setPlacerState(PlacerPosition.Bottom));
-		goMiddleButton.onTrue(placer.setPlacerState(PlacerPosition.Middle));
-		goTopButton.onTrue(placer.setPlacerState(PlacerPosition.Top));
-		goSubstationButton.onTrue(placer.setPlacerState(PlacerPosition.Substation));
-		goZeroButton.onTrue(placer.setPlacerState(PlacerPosition.TeleopZero));
+		placeButton.whileTrue(placer.runPlacerAndZeroCommand(PlacerOutput.Place));
+		intakeConeButton.whileTrue(placer.runPlacerAndZeroCommand(PlacerOutput.PickupCone));
+		intakeCubeButton.whileTrue(placer.runPlacerAndZeroCommand(PlacerOutput.PickupCube));
+		goBottomButton.onTrue(placer.movePlacerCommand(PlacerPosition.Bottom));
+		goMiddleButton.onTrue(placer.movePlacerCommand(PlacerPosition.Middle));
+		goTopButton.onTrue(placer.movePlacerCommand(PlacerPosition.Top));
+		goSubstationButton.onTrue(placer.movePlacerCommand(PlacerPosition.Substation));
+		goZeroButton.onTrue(placer.movePlacerCommand(PlacerPosition.TeleopZero));
 	}
 
 	public Command rumbleCommand(double timeSeconds) {
