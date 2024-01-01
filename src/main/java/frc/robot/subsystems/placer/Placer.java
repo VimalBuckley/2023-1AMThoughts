@@ -37,23 +37,23 @@ public class Placer extends SubsystemBase implements LoggableInputs {
         intakeAngleMotor = new SparkMaxMotorController(12, MotorType.kBrushless);
         intakeRunMotor = new SparkMaxMotorController(13, MotorType.kBrushless);
 
-        armExtensionMotor.setPID(new PIDConstants(0.04, 0, 0))
-            .setMinOutput(-0.5)
-            .setMaxOutput(0.5);
+        armExtensionMotor.configPID(new PIDConstants(0.04, 0, 0))
+            .configMinOutput(-0.5)
+            .configMaxOutput(0.5);
         
-        armAngleMotor.setPID(new PIDConstants(0.4, 0, 0))
-            .setAngleTolerance(0.6)
-            .setMaxAngle(15.34)
-            .setMinOutput(-0.3)
-            .setMaxOutput(0.6);
+        armAngleMotor.configPID(new PIDConstants(0.4, 0, 0))
+            .configAngleTolerance(Rotation2d.fromRadians(0.6))
+            .configMaxAngle(Rotation2d.fromRadians(15.34))
+            .configMinOutput(-0.3)
+            .configMaxOutput(0.6);
 
-        intakeAngleMotor.setPID(new PIDConstants(1, 0, 0))
-            .setMinOutput(-0.3)
-            .setMaxOutput(0.3)
-            .setBrakeOnIdle(false)
-            .setMinAngle(-251);
+        intakeAngleMotor.configPID(new PIDConstants(1, 0, 0))
+            .configMinOutput(-0.3)
+            .configMaxOutput(0.3)
+            .configBrakeOnIdle(false)
+            .configMinAngle(Rotation2d.fromRadians(-251));
 
-        intakeRunMotor.setBrakeOnIdle(true);
+        intakeRunMotor.configBrakeOnIdle(true);
     }
 
     public Command runPlacerCommand(PlacerOutput output) {

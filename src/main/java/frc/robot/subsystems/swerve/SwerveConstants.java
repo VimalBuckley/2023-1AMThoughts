@@ -24,15 +24,15 @@ public class SwerveConstants {
 
     public static final EncodedMotorController FRONT_LEFT_DRIVE_MOTOR = 
         new TalonFXMotorController(CANConstants.SWERVE_FRONT_LEFT_DRIVE_ID)
-            .setInversion(true)
-            .setCurrentLimit(35)
-            .setPID(new PIDConstants(0.075, 0, 0)
+            .configInversion(true)
+            .configCurrentLimit(35)
+            .configPID(new PIDConstants(0.075, 0, 0)
         );
     public static final EncodedMotorController FRONT_LEFT_ANGLE_MOTOR = 
         new TalonFXMotorController(CANConstants.SWERVE_FRONT_LEFT_ANGLE_ID)
-            .setInversion(false)
-            .setCurrentLimit(25)
-            .setPID(new PIDConstants(0.3, 0, 0)
+            .configInversion(false)
+            .configCurrentLimit(25)
+            .configPID(new PIDConstants(0.3, 0, 0)
         );
     public static final Translation2d FRONT_LEFT_MODULE_TRANSLATION = new Translation2d(
         0.3175,
@@ -41,15 +41,15 @@ public class SwerveConstants {
 
     public static final EncodedMotorController FRONT_RIGHT_DRIVE_MOTOR = 
         new TalonFXMotorController(CANConstants.SWERVE_FRONT_RIGHT_DRIVE_ID)
-            .setInversion(false)
-            .setCurrentLimit(35)
-            .setPID(new PIDConstants(0.05, 0, 0)
+            .configInversion(false)
+            .configCurrentLimit(35)
+            .configPID(new PIDConstants(0.05, 0, 0)
         );
     public static final EncodedMotorController FRONT_RIGHT_ANGLE_MOTOR = 
         new TalonFXMotorController(CANConstants.SWERVE_FRONT_RIGHT_ANGLE_ID)
-            .setInversion(false)
-            .setCurrentLimit(25)
-            .setPID(new PIDConstants(0.3, 0, 0)
+            .configInversion(false)
+            .configCurrentLimit(25)
+            .configPID(new PIDConstants(0.3, 0, 0)
         );
     public static final Translation2d FRONT_RIGHT_MODULE_TRANSLATION = new Translation2d(
         0.3175,
@@ -58,15 +58,15 @@ public class SwerveConstants {
 
     public static final EncodedMotorController BACK_LEFT_DRIVE_MOTOR = 
         new TalonFXMotorController(CANConstants.SWERVE_BACK_LEFT_DRIVE_ID)
-            .setInversion(true)
-            .setCurrentLimit(35)
-            .setPID(new PIDConstants(0.075, 0, 0)
+            .configInversion(true)
+            .configCurrentLimit(35)
+            .configPID(new PIDConstants(0.075, 0, 0)
         );
     public static final EncodedMotorController BACK_LEFT_ANGLE_MOTOR = 
         new TalonFXMotorController(CANConstants.SWERVE_BACK_LEFT_ANGLE_ID)
-            .setInversion(false)
-            .setCurrentLimit(25)
-            .setPID(new PIDConstants(0.25, 0, 0)
+            .configInversion(false)
+            .configCurrentLimit(25)
+            .configPID(new PIDConstants(0.25, 0, 0)
         );
     public static final Translation2d BACK_LEFT_MODULE_TRANSLATION = new Translation2d(
         -0.3175,
@@ -75,15 +75,15 @@ public class SwerveConstants {
 
     public static final EncodedMotorController BACK_RIGHT_DRIVE_MOTOR = 
         new TalonFXMotorController(CANConstants.SWERVE_BACK_RIGHT_DRIVE_ID)
-            .setInversion(false)
-            .setCurrentLimit(35)
-            .setPID(new PIDConstants(0.05, 0, 0)
+            .configInversion(false)
+            .configCurrentLimit(35)
+            .configPID(new PIDConstants(0.05, 0, 0)
         );
     public static final EncodedMotorController BACK_RIGHT_ANGLE_MOTOR = 
         new TalonFXMotorController(CANConstants.SWERVE_BACK_RIGHT_ANGLE_ID)
-            .setInversion(false)
-            .setCurrentLimit(25)
-            .setPID(new PIDConstants(0.3, 0, 0)
+            .configInversion(false)
+            .configCurrentLimit(25)
+            .configPID(new PIDConstants(0.3, 0, 0)
         );
     public static final Translation2d BACK_RIGHT_MODULE_TRANSLATION = new Translation2d(
         -0.3175,

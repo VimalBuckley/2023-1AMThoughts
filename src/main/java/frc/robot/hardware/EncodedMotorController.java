@@ -12,13 +12,13 @@ public interface EncodedMotorController {
 	public void setOutput(double targetPercentOutput);
 	public double getPercentOutput();
 	public boolean hasContinuousRotation();
-	public EncodedMotorController setCurrentLimit(int currentLimitAmps);
-	public EncodedMotorController setPID(PIDConstants pid);
-	public EncodedMotorController setMinAngle(double minAngleRadians);
-	public EncodedMotorController setMaxAngle(double maxAngleRadians);
-	public EncodedMotorController setMinOutput(double minPercentOutput);
-	public EncodedMotorController setMaxOutput(double maxPercentOutput);
-	public EncodedMotorController setInversion(boolean shouldInvert);
-	public EncodedMotorController setBrakeOnIdle(boolean shouldBreak);
-	public EncodedMotorController setAngleTolerance(double toleranceAngleRadians);
+	public EncodedMotorController configCurrentLimit(int currentLimitAmps);
+	public EncodedMotorController configPID(PIDConstants pid);
+	public EncodedMotorController configMinAngle(Rotation2d min);
+	public EncodedMotorController configMaxAngle(Rotation2d max);
+	public EncodedMotorController configMinOutput(double minPercentOutput);
+	public EncodedMotorController configMaxOutput(double maxPercentOutput);
+	public EncodedMotorController configInversion(boolean shouldInvert);
+	public EncodedMotorController configBrakeOnIdle(boolean shouldBreak);
+	public EncodedMotorController configAngleTolerance(Rotation2d tolerance);
 }

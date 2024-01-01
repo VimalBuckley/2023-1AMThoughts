@@ -59,13 +59,13 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 	}
 
 	@Override
-	public EncodedMotorController setCurrentLimit(int currentLimit) {
+	public EncodedMotorController configCurrentLimit(int currentLimit) {
 		setSmartCurrentLimit(currentLimit);
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController setPID(PIDConstants pid) {
+	public EncodedMotorController configPID(PIDConstants pid) {
 		SparkMaxPIDController controller = getPIDController();
 		controller.setP(pid.kP);
 		controller.setI(pid.kI);
@@ -74,39 +74,39 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 	}
 
 	@Override
-	public EncodedMotorController setMinAngle(double minPosition) {
-		setSoftLimit(SoftLimitDirection.kReverse, (float) Units.radiansToRotations(minPosition));
+	public EncodedMotorController configMinAngle(Rotation2d min) {
+		setSoftLimit(SoftLimitDirection.kReverse, (float) min.getRotations());
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController setMaxAngle(double maxPosition) {
-		setSoftLimit(SoftLimitDirection.kForward, (float) Units.radiansToRotations(maxPosition));
+	public EncodedMotorController configMaxAngle(Rotation2d max) {
+		setSoftLimit(SoftLimitDirection.kForward, (float) max.getRotations());
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController setMinOutput(double minOutput) {
+	public EncodedMotorController configMinOutput(double minOutput) {
 		SparkMaxPIDController controller = getPIDController();
 		controller.setOutputRange(minOutput, controller.getOutputMax());
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController setMaxOutput(double maxOutput) {
+	public EncodedMotorController configMaxOutput(double maxOutput) {
 		SparkMaxPIDController controller = getPIDController();
 		controller.setOutputRange(controller.getOutputMin(), maxOutput);
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController setInversion(boolean shouldInvert) {
+	public EncodedMotorController configInversion(boolean shouldInvert) {
 		setInverted(shouldInvert);
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController setBrakeOnIdle(boolean shouldBreak) {
+	public EncodedMotorController configBrakeOnIdle(boolean shouldBreak) {
         setIdleMode(
           shouldBreak
           ? IdleMode.kBrake
@@ -116,8 +116,8 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 	}
 
 	@Override
-	public EncodedMotorController setAngleTolerance(double tolerance) {
-		this.tolerance = Rotation2d.fromRadians(tolerance);
+	public EncodedMotorController configAngleTolerance(Rotation2d tolerance) {
+		this.tolerance = tolerance;
 		return this;
 	}
 }
