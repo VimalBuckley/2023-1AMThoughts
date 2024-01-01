@@ -40,15 +40,15 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 	}
 
     @Override
-	public double getAngularVelocity() {
-		return Units.rotationsPerMinuteToRadiansPerSecond(getEncoder().getVelocity());
+	public Rotation2d getAngularVelocity() {
+		return Rotation2d.fromRotations(getEncoder().getVelocity() / 60);
 	}
 	
     @Override
-	public void setAngularVelocity(double velocity) {
+	public void setAngularVelocity(Rotation2d velocity) {
 		getPIDController()
 			.setReference(
-				Units.radiansPerSecondToRotationsPerMinute(velocity),
+				velocity.times(60).getRotations(),
 				ControlType.kVelocity
 			);
 	}

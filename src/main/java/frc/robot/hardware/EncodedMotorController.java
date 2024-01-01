@@ -5,8 +5,8 @@ import com.pathplanner.lib.auto.PIDConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface EncodedMotorController {
-	public void setAngularVelocity(double targetAngularVelocity);
-	public double getAngularVelocity();
+	public void setAngularVelocity(Rotation2d velocity);
+	public Rotation2d getAngularVelocity();
 	public void setAngle(Rotation2d angle);
 	public Rotation2d getAngle();
 	public void setOutput(double targetPercentOutput);
