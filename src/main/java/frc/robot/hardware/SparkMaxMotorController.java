@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 
 public class SparkMaxMotorController extends CANSparkMax implements EncodedMotorController {
 	private Rotation2d tolerance;

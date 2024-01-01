@@ -6,21 +6,30 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.CANConstants;
 import frc.robot.hardware.EncodedMotorController;
 import frc.robot.hardware.TalonFXMotorController;
+import frc.robot.subsystems.swerve.SwerveModule.SwerveModuleConfig;
 
 public class SwerveConstants {
     // TODO: Change these!
-    /** Drive rotations per motor rotation */
-    public static final double DRIVE_RATIO = 1/5.;
-    /** Angle rotations per motor rotation */
-    public static final double ANGLE_RATIO = 1/6.75;
-
     public static final double MAX_LINEAR_SPEED_MPS = 5.088;
-    public static final double WHEEL_DIAMETER_METERS = 0.0762;
 
-    /* Sensitivities */
-    public static final double MAX_FORWARD_SENSITIVITY = 4;
-    public static final double MAX_SIDEWAYS_SENSITIVITY = 4;
-    public static final double MAX_ROTATIONAL_SENSITIVITY = 3.5;
+    public static final SwerveModuleConfig MODULE_CONFIG = new SwerveModuleConfig(
+        1 / 5.0, // Drive rotations per motor rotation
+        1 / 6.75, // Angle rotations per motor rotation
+        0.0762 // Wheel diameter in meters
+    );
+
+    public static enum DriveMode {
+        AngleCentric,
+        RobotCentric,
+        AlignToTarget
+    }
+
+    public static SwerveSens CONTROLLLER_SENS = new SwerveSens(
+        4, // Max forward sens 
+        4, // Max sideways sens
+        3.5,  // Max rotational sens
+        0.2 // Min sens
+    );
 
     public static final EncodedMotorController FRONT_LEFT_DRIVE_MOTOR = 
         new TalonFXMotorController(CANConstants.SWERVE_FRONT_LEFT_DRIVE_ID)

@@ -11,51 +11,54 @@ public class SwerveModule {
 	private EncodedMotorController driveMotor;
 	private EncodedMotorController angleMotor;
 	private Translation2d translationFromCenter;
+	private SwerveModuleConfig config;
 
 	public SwerveModule(
 		EncodedMotorController driveMotor,
 		EncodedMotorController angleMotor,
-		Translation2d translationToCenter
+		Translation2d translationToCenter,
+		SwerveModuleConfig config
 	) {
 		this.driveMotor = driveMotor;
 		this.angleMotor = angleMotor;
 		this.translationFromCenter = translationToCenter;
+		this.config = config;
 	}
 
 	public void drive(SwerveModuleState initialTargetState) {
 		SwerveModuleState targetState = ExtendedMath.optimizeModuleState(
 			initialTargetState, 
-			getModuleState().angle,
+			getState().angle,
 			angleMotor.hasContinuousRotation()
 		);
-		setModuleVelocity(
+		setVelocity(
 			targetState.speedMetersPerSecond * 
             // Scale velocity by how far wheel is from target
-			Math.abs(targetState.angle.minus(getModuleState().angle).getCos())
+			Math.abs(targetState.angle.minus(getState().angle).getCos())
 		);
-		setModuleAngle(targetState.angle);
+		setAngle(targetState.angle);
 	}
 
-	public SwerveModuleState getModuleState() {
+	public SwerveModuleState getState() {
 		return new SwerveModuleState(
 			driveMotor.getAngularVelocity()
-				.times(SwerveConstants.DRIVE_RATIO)
-				.times(SwerveConstants.WHEEL_DIAMETER_METERS)
+				.times(config.driveRatio)
+				.times(config.diameterMeters)
 				.div(2)
 				.getRadians(),
-			angleMotor.getAngle().times(SwerveConstants.ANGLE_RATIO)
+			angleMotor.getAngle().times(config.angleRatio)
 		);
 	}
 
-	public SwerveModulePosition getModulePosition() {
+	public SwerveModulePosition getPosition() {
 		return new SwerveModulePosition(
 			driveMotor.getAngle()
 				.div(2 * Math.PI)
-				.times(SwerveConstants.DRIVE_RATIO)
-				.times(SwerveConstants.WHEEL_DIAMETER_METERS)
+				.times(config.driveRatio)
+				.times(config.diameterMeters)
 				.times(Math.PI)
 				.getRadians(),
-			getModuleState().angle
+			getState().angle
 		);
 	}
 
@@ -63,16 +66,22 @@ public class SwerveModule {
 		return translationFromCenter;
 	}
 
-	public void setModuleAngle(Rotation2d angle) {
-		angleMotor.setAngle(angle.div(SwerveConstants.ANGLE_RATIO));
+	public void setAngle(Rotation2d angle) {
+		angleMotor.setAngle(angle.div(config.angleRatio));
 	}
 
-	public void setModuleVelocity(double targetVelocityMetersPerSecond) {
+	public void setVelocity(double targetVelocityMetersPerSecond) {
 		driveMotor.setAngularVelocity(
 			Rotation2d.fromRadians(
 				targetVelocityMetersPerSecond * 2 /
-				(SwerveConstants.DRIVE_RATIO * SwerveConstants.WHEEL_DIAMETER_METERS)
+				(config.driveRatio * config.angleRatio)
 			)
 		);
 	}
+
+	public static record SwerveModuleConfig(
+        double driveRatio, 
+        double angleRatio, 
+        double diameterMeters
+    ) {}
 }

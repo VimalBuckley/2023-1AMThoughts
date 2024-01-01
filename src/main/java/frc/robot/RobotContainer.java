@@ -17,6 +17,7 @@ import frc.robot.subsystems.placer.Placer;
 import frc.robot.subsystems.placer.Placer.PlacerOutput;
 import frc.robot.subsystems.placer.Placer.PlacerPosition;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveController;
 
 public class RobotContainer {
 	private CommandXboxController xbox;
@@ -50,7 +51,9 @@ public class RobotContainer {
 
 	public void setupDriveController() {
 		xbox = new CommandXboxController(DRIVER_PORT);
-		swerve.setDefaultCommand(swerve.followControllerCommand(xbox));
+		swerve.setDefaultCommand(swerve.followControllerCommand(
+			SwerveController.xboxConversion(xbox)
+		));
 		
 		Trigger switchDriveModeButton = xbox.x();
 		Trigger resetGyroButton = xbox.a();

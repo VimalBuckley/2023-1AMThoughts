@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.hardware.NavX;
+import frc.robot.subsystems.swerve.SwerveConstants.DriveMode;
 import frc.robot.subsystems.vision.AprilTagVision;
 import frc.robot.subsystems.vision.GamePieceVision;
 
@@ -50,22 +50,26 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
 			new SwerveModule(
 				SwerveConstants.FRONT_LEFT_DRIVE_MOTOR,
 				SwerveConstants.FRONT_LEFT_ANGLE_MOTOR,
-				SwerveConstants.FRONT_LEFT_MODULE_TRANSLATION
+				SwerveConstants.FRONT_LEFT_MODULE_TRANSLATION,
+				SwerveConstants.MODULE_CONFIG
 			),
 			new SwerveModule(
 				SwerveConstants.FRONT_RIGHT_DRIVE_MOTOR,
 				SwerveConstants.FRONT_RIGHT_ANGLE_MOTOR,
-				SwerveConstants.FRONT_RIGHT_MODULE_TRANSLATION
+				SwerveConstants.FRONT_RIGHT_MODULE_TRANSLATION,
+				SwerveConstants.MODULE_CONFIG
 			),
 			new SwerveModule(
 				SwerveConstants.BACK_LEFT_DRIVE_MOTOR,
 				SwerveConstants.BACK_LEFT_ANGLE_MOTOR,
-				SwerveConstants.BACK_LEFT_MODULE_TRANSLATION
+				SwerveConstants.BACK_LEFT_MODULE_TRANSLATION,
+				SwerveConstants.MODULE_CONFIG
 			),
 			new SwerveModule(
 				SwerveConstants.BACK_RIGHT_DRIVE_MOTOR,
 				SwerveConstants.BACK_RIGHT_ANGLE_MOTOR,
-				SwerveConstants.BACK_RIGHT_MODULE_TRANSLATION
+				SwerveConstants.BACK_RIGHT_MODULE_TRANSLATION,
+				SwerveConstants.MODULE_CONFIG
 			),
 		};
 		gyro = new NavX(I2C.Port.kMXP);
@@ -85,49 +89,28 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
 		);
     }
 
-    public Command followControllerCommand(CommandXboxController xbox) {
+    public Command followControllerCommand(SwerveController controller) {
         return Commands.run(
             () -> {
-                double sensScalar = (1.2 - xbox.getLeftTriggerAxis()) / 1.2;
-                double forwardSens = sensScalar * 4;
-                double sidewaysSens = sensScalar * 4;
-                double rotationalSens = sensScalar * 3.5;
-
-                double rightX = -xbox.getRightX();
-                double rightY = -xbox.getRightY();
-                double leftX = -xbox.getLeftX();
-                double leftY = -xbox.getLeftY();
-
-                if (Math.abs(rightY) > 0.5) {
-                    targetAngle = Rotation2d.fromDegrees(90 - 90 * Math.signum(rightY));
-                }
-                targetAngle = Rotation2d.fromDegrees(targetAngle.getDegrees() + rightX * rotationalSens);
-
-                double forwardVelocity = leftY * forwardSens;
-                double sidewaysVelocity = leftX * sidewaysSens;
-                double rotationalVelocity = rightX * rotationalSens;
-
+				ChassisSpeeds speeds = SwerveConstants.CONTROLLLER_SENS.generateSpeeds(controller);
+				targetAngle = controller.getTargetAngle(SwerveConstants.CONTROLLLER_SENS, targetAngle);
                 switch (driveMode) {
                     case RobotCentric:
                         driveRobotCentric(
-                            new ChassisSpeeds(
-                                forwardVelocity, 
-                                sidewaysVelocity,
-                                rotationalVelocity
-                            )
+                            speeds
                         );
 				        break;
                     case AngleCentric:
                         driveAngleCentric(
-                            forwardVelocity, 
-                            sidewaysVelocity, 
+                            speeds.vxMetersPerSecond,
+							speeds.vyMetersPerSecond,
                             targetAngle
                         );
                         break;
                     case AlignToTarget:
                         driveAlignToTarget(
-                            forwardVelocity,
-                            sidewaysVelocity,
+                            speeds.vxMetersPerSecond,
+							speeds.vyMetersPerSecond,
                             targetAngle
                         );
                 }
@@ -241,35 +224,35 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
 	public void toLog(LogTable table) {
 		table.put(
 			"Front Left Module Velocity (M/S)",
-			modules[0].getModuleState().speedMetersPerSecond
+			modules[0].getState().speedMetersPerSecond
 		);
 		table.put(
 			"Front Left Module Angle (Radians)",
-			modules[0].getModuleState().angle.getRadians()
+			modules[0].getState().angle.getRadians()
 		);
 		table.put(
 			"Front Right Module Velocity (M/S)",
-			modules[1].getModuleState().speedMetersPerSecond
+			modules[1].getState().speedMetersPerSecond
 		);
 		table.put(
 			"Front Right Module Angle (Radians)",
-			modules[1].getModuleState().angle.getRadians()
+			modules[1].getState().angle.getRadians()
 		);
 		table.put(
 			"Back Left Module Velocity (M/S)",
-			modules[2].getModuleState().speedMetersPerSecond
+			modules[2].getState().speedMetersPerSecond
 		);
 		table.put(
 			"Back Left Module Angle (Radians)",
-			modules[2].getModuleState().angle.getRadians()
+			modules[2].getState().angle.getRadians()
 		);
 		table.put(
 			"Back Right Module Velocity (M/S)",
-			modules[3].getModuleState().speedMetersPerSecond
+			modules[3].getState().speedMetersPerSecond
 		);
 		table.put(
 			"Back Right Module Angle (Radians)",
-			modules[3].getModuleState().angle.getRadians()
+			modules[3].getState().angle.getRadians()
 		);
 		Logger.getInstance().recordOutput(
 			"Swerve Odometry", 
@@ -350,7 +333,7 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
 	private SwerveModuleState[] getModuleStates() {
 		SwerveModuleState[] states = new SwerveModuleState[modules.length];
 		for (int i = 0; i < modules.length; i++) {
-			states[i] = modules[i].getModuleState();
+			states[i] = modules[i].getState();
 		}
 		return states;
 	}
@@ -358,14 +341,8 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
 	private SwerveModulePosition[] getModulePositions() {
 		SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
 		for (int i = 0; i < modules.length; i++) {
-			positions[i] = modules[i].getModulePosition();
+			positions[i] = modules[i].getPosition();
 		}
 		return positions;
 	}
-
-	public static enum DriveMode {
-        AngleCentric,
-        RobotCentric,
-        AlignToTarget
-    }
 }
