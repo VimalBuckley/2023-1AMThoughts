@@ -31,6 +31,7 @@ public class GamePieceVision extends SubsystemBase implements LoggableInputs {
         return limelight.hasValidTargets();
     }
 
+    /** Returns the translation of the targeted gamepiece relative to the camera */
     public Translation2d getTranslation(Translation2d defaultTranslation) {
         if (!seesPiece()) return defaultTranslation;
 		double forwardDistance = 
@@ -49,14 +50,17 @@ public class GamePieceVision extends SubsystemBase implements LoggableInputs {
 		);
     }
 
+    /** Returns the horizontal angle from the camera to the gamepiece */
     public Rotation2d getHorizontalOffset(Rotation2d defaultOffset) {
         return limelight.getHorizontalOffsetFromCrosshair().orElse(defaultOffset);
     }
 
+    /** Returns the verical angle from the camera to the gamepiece */
     public Rotation2d getVerticalOffset(Rotation2d defaultOffset) {
         return limelight.getVerticalOffsetFromCrosshair().orElse(defaultOffset);
     }
 
+    /** Returns a percent (0-1) of how much of the screen is taken up by the gamepiece */
     public double getTakenArea(double defaultArea) {
         return limelight.getTargetArea().orElse(defaultArea);
     }

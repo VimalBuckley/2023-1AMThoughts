@@ -38,6 +38,7 @@ public class RobotContainer {
 		messaging = Messaging.getInstance();
 		setupAuto();
 		setupDriveController();
+		setupOperatorController();
 	}
 
 	public void setupAuto() {

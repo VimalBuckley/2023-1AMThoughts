@@ -56,13 +56,18 @@ public class Placer extends SubsystemBase implements LoggableInputs {
         intakeRunMotor.configBrakeOnIdle(true);
     }
 
+    /** A command that when run, runs the intake at the target output, 
+     * and when canceled, turns the output off */
     public Command runPlacerCommand(PlacerOutput output) {
         return Commands.startEnd(
             () -> setPlacerOutput(output),
-            () -> setPlacerOutput(PlacerOutput.Off)
+            () -> setPlacerOutput(PlacerOutput.Off),
+            this
         );
     }
 
+    /** A command that when run, runs the intake at the target output,
+     * and when cancleded, turns the intake off and zeros the arm */
     public Command runPlacerAndZeroCommand(PlacerOutput output) {
         return Commands.startEnd(
             () -> setPlacerOutput(output),
@@ -74,6 +79,7 @@ public class Placer extends SubsystemBase implements LoggableInputs {
         );
     }
 
+    /** A command that sets the position of the arm */
     public Command movePlacerCommand(PlacerPosition position) {
         return Commands.runOnce(
             () -> setPlacerPosition(position), 

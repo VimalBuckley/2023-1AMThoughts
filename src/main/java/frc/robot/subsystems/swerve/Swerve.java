@@ -89,6 +89,21 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
 		);
     }
 
+	/**
+	 * A command that follows a controller input in 3 different modes, 
+	 * robot centric, angle centric, and align to target.<p>
+	 * <strong>Robot Centric</strong> is where the controller controls the 
+	 * robot relative to the robot. For example, if the joystick is pushed forward,
+	 * the robot will move in the direction of its front.<p>
+	 * <strong>Angle Centric</strong> is where the controller controls the robot
+	 * relative to the field (or whichever direction the robot is zeroed in).
+	 * The robot also holds a target angle to counter drift or collisions.<p>
+	 * <strong>Align to Target</strong> is where the robot controls its relative
+	 * sideways and rotational velocities to align to a game piece, but the driver
+	 * controls the robot's forward velocity.
+	 * @param controller the controller to follow
+	 * @return the command to follow the controller
+	 */
     public Command followControllerCommand(SwerveController controller) {
         return Commands.run(
             () -> {
@@ -120,6 +135,13 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
         );
     }
 
+	/**
+	 * A command which aligns to an april tag
+	 * @param relativeTargetPose the target pose relative to the april tag. Can 
+	 * be obtained via the {@link frc.robot.subsystems.vision.AprilTagVision#getRelativeTagPose(Pose2d) 
+	 * getRelativeTagPose} method.
+	 * @return the command to align to the tag
+	 */
     public Command moveToTagCommand(Pose2d relativeTargetPose) {
         return Commands.run(
 			() -> {
@@ -135,10 +157,12 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
 		);
     }
 
+	/** A command which makes it so that the current direction of the robot is "0" */
     public Command resetGyroCommand() {
         return Commands.runOnce(() -> resetGyro());
     }
 
+	/** When run, toggles between RobotCentric and AngleCentric drive modes */
     public Command toggleRobotCentricCommand() {
         return Commands.runOnce(
             () -> {
@@ -152,6 +176,7 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
         );
     }
 
+	/** When run, toggles between RobotCentric and AlignToTarget drive modes */
 	public Command toggleAlignToTargetCommand() {
 		return Commands.startEnd(
 			() -> {
@@ -264,7 +289,7 @@ public class Swerve extends SubsystemBase implements LoggableInputs {
 		);
 	}
 
-	@Override
+	@Override // If we ever to replaying or sim stuff, it would go in here
 	public void fromLog(LogTable table) {}
 
     public Pose2d getRobotPose() {

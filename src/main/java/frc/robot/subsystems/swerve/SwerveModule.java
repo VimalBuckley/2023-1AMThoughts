@@ -13,6 +13,14 @@ public class SwerveModule {
 	private Translation2d translationFromCenter;
 	private SwerveModuleConfig config;
 
+	/**
+	 * Creates a new swerve module with the given attributes
+	 * @param driveMotor The motor to be used for driving. Should already be configured
+	 * @param angleMotor The motor to be used for turning. Should already be configured
+	 * @param translationToCenter The translation from the center of rotation of the module
+	 * to the center of rotation of the robot, which is normally the center of the robot
+	 * @param config Misc info about gear ratios and wheel diameter. Probably the same for all modules
+	 */
 	public SwerveModule(
 		EncodedMotorController driveMotor,
 		EncodedMotorController angleMotor,

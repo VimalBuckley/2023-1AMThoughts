@@ -34,16 +34,20 @@ public class AprilTagVision extends SubsystemBase implements LoggableInputs {
         return limelight.getTargetTagId().orElse(defaultId);
     }
 
+    /** Overload for {@link frc.robot.subsystems.vision.AprilTagVision#getRobotPose(Pose2d, Alliance) 
+     * getRobotPose(Pose2d, Alliance)} which uses the current alliance given by DriveStation*/
     public Pose2d getRobotPose(Pose2d defaultPose) {
 		return getRobotPose(defaultPose, DriverStation.getAlliance());
 	}
 
+    /** Returns the robot's pose on the field given an origin alliance */
 	public Pose2d getRobotPose(Pose2d defaultPose, Alliance poseOrigin) {
 		return limelight
 			.getRobotPoseToAlliance(poseOrigin)
 			.orElse(defaultPose);
 	}
 
+    /** Returns the robot pose relative to an april tag */
     public Pose2d getRelativeTagPose(Pose2d defaultPose) {
         if (!seesTag()) return defaultPose;
 		Pose2d backwardsPose = getRobotPose(new Pose2d(), Alliance.Blue)
@@ -55,7 +59,9 @@ public class AprilTagVision extends SubsystemBase implements LoggableInputs {
         );
     }
     
+    /** A helper method to return the field relative positions of all tags */
     private Pose2d getTagPose(int tagId) {
+        // TODO: Update these poses
         Rotation2d tagRotation = Rotation2d.fromDegrees(tagId > 4 ? 0 : 180);
         Translation2d tagTranslation = new Translation2d();
         double longOffset = 16.4846 / 2;
