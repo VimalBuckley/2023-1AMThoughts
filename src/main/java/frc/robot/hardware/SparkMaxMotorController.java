@@ -4,28 +4,29 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 public class SparkMaxMotorController extends CANSparkMax implements EncodedMotorController {
-	private double angleTolerance;
+	private Rotation2d tolerance;
 
 	public SparkMaxMotorController(int deviceID, MotorType type) {
 		super(deviceID, type);
-		angleTolerance = 0;
+		tolerance = new Rotation2d(); // default tolerance to 0
 	}
 
     @Override
-	public double getAngleRadians() {
-		return Units.rotationsToRadians(getEncoder().getPosition());
+	public Rotation2d getAngle() {
+		return Rotation2d.fromRotations(getEncoder().getPosition());
 	}
 
     @Override
-	public void setAngle(double position) {
-		if (Math.abs(position - getAngleRadians())  < angleTolerance) {
-			position = getAngleRadians();
+	public void setAngle(Rotation2d angle) {
+		if (Math.abs(angle.minus(getAngle()).getRadians()) < tolerance.getRadians()) {
+			angle = getAngle();
 		} 
 		getPIDController()
-			.setReference(Units.radiansToRotations(position), ControlType.kPosition);
+			.setReference(angle.getRotations(), ControlType.kPosition);
 	}
 
     @Override
@@ -116,7 +117,7 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 
 	@Override
 	public EncodedMotorController setAngleTolerance(double tolerance) {
-		angleTolerance = tolerance;
+		this.tolerance = Rotation2d.fromRadians(tolerance);
 		return this;
 	}
 }

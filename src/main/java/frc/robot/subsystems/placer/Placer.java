@@ -3,6 +3,7 @@ package frc.robot.subsystems.placer;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -84,9 +85,9 @@ public class Placer extends SubsystemBase implements LoggableInputs {
     public void toLog(LogTable table) {
         table.put("Target Game Piece", currentGamePiece.name());
         table.put("Target Placer Position", currentPlacerPosition.name());
-        table.put("Current Arm Extension", armExtensionMotor.getAngleRadians());
-        table.put("Current Arm Angle", armAngleMotor.getAngleRadians());
-        table.put("Current Intake Intake", intakeAngleMotor.getAngleRadians());
+        table.put("Current Arm Extension", armExtensionMotor.getAngle().getRadians());
+        table.put("Current Arm Angle", armAngleMotor.getAngle().getRadians());
+        table.put("Current Intake Intake", intakeAngleMotor.getAngle().getRadians());
     }
 
     @Override
@@ -121,12 +122,12 @@ public class Placer extends SubsystemBase implements LoggableInputs {
     }
 
     private boolean atTargetState() {
-        double armExtension = armExtensionMotor.getAngleRadians();
-        double armAngle = armAngleMotor.getAngleRadians();
-        double intakeAngle = intakeAngleMotor.getAngleRadians();
-        return Math.abs(armExtension - currentPlacerPosition.armExtension )< 1
-            && Math.abs(armAngle - currentPlacerPosition.armAngle) < 1
-            && Math.abs(intakeAngle - currentPlacerPosition.intakeAngle) < 1; 
+        Rotation2d armExtension = armExtensionMotor.getAngle();
+        Rotation2d armAngle = armAngleMotor.getAngle();
+        Rotation2d intakeAngle = intakeAngleMotor.getAngle();
+        return Math.abs(armExtension.minus(currentPlacerPosition.armExtension).getRadians())< 1
+            && Math.abs(armAngle.minus(currentPlacerPosition.armAngle).getRadians()) < 1
+            && Math.abs(intakeAngle.minus(currentPlacerPosition.intakeAngle).getRadians()) < 1; 
     }
 
     public static enum PlacerPosition {
@@ -137,11 +138,11 @@ public class Placer extends SubsystemBase implements LoggableInputs {
         Top(TOP_ARM_EXTENSION, TOP_ARM_ANGLE, TOP_INTAKE_ANGLE),
         Substation(SUBSTATION_ARM_EXTENSION, SUBSATION_ARM_ANGLE, SUBSTATION_INTAKE_ANGLE);
 
-        public double armExtension;
-        public double armAngle;
-        public double intakeAngle;
+        public Rotation2d armExtension;
+        public Rotation2d armAngle;
+        public Rotation2d intakeAngle;
 
-        private PlacerPosition(double armExtension, double armAngle, double intakeAngle) {
+        private PlacerPosition(Rotation2d armExtension, Rotation2d armAngle, Rotation2d intakeAngle) {
             this.armExtension = armExtension;
             this.armAngle = armAngle;
             this.intakeAngle = intakeAngle;

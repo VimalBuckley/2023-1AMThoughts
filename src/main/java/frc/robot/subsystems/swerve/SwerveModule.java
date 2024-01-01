@@ -33,7 +33,7 @@ public class SwerveModule {
             // Scale velocity by how far wheel is from target
 			Math.abs(targetState.angle.minus(getModuleState().angle).getCos())
 		);
-		setModuleAngle(targetState.angle.getRadians());
+		setModuleAngle(targetState.angle);
 	}
 
 	public SwerveModuleState getModuleState() {
@@ -42,7 +42,7 @@ public class SwerveModule {
 			SwerveConstants.DRIVE_RATIO *
 			SwerveConstants.WHEEL_DIAMETER_METERS /
 			2,
-			new Rotation2d(angleMotor.getAngleRadians() * SwerveConstants.ANGLE_RATIO)
+			angleMotor.getAngle().times(SwerveConstants.ANGLE_RATIO)
 		);
 	}
 
@@ -52,11 +52,17 @@ public class SwerveModule {
 
 	public SwerveModulePosition getModulePosition() {
 		return new SwerveModulePosition(
-			driveMotor.getAngleRadians() /
-			(2 * Math.PI) * 
-			SwerveConstants.DRIVE_RATIO *
-			SwerveConstants.WHEEL_DIAMETER_METERS *
-			Math.PI,
+			// driveMotor.getAngle() /
+			// (2 * Math.PI) * 
+			// SwerveConstants.DRIVE_RATIO *
+			// SwerveConstants.WHEEL_DIAMETER_METERS *
+			// Math.PI,
+			driveMotor.getAngle()
+				.div(2 * Math.PI)
+				.times(SwerveConstants.DRIVE_RATIO)
+				.times(SwerveConstants.WHEEL_DIAMETER_METERS)
+				.times(Math.PI)
+				.getRadians(),
 			getModuleState().angle
 		);
 	}
@@ -65,8 +71,8 @@ public class SwerveModule {
 		return translationFromCenter;
 	}
 
-	public void setModuleAngle(double targetAngleRadians) {
-		angleMotor.setAngle(targetAngleRadians / SwerveConstants.ANGLE_RATIO);
+	public void setModuleAngle(Rotation2d angle) {
+		angleMotor.setAngle(angle.div(SwerveConstants.ANGLE_RATIO));
 	}
 
 	public void setModuleVelocity(double targetVelocityMetersPerSecond) {

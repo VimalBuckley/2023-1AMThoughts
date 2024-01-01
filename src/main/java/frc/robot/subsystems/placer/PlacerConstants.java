@@ -1,29 +1,31 @@
 package frc.robot.subsystems.placer;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public class PlacerConstants {
-    public static final double BOTTOM_ARM_ANGLE = 0;
-    public static final double BOTTOM_ARM_EXTENSION = 0;
-    public static final double BOTTOM_INTAKE_ANGLE = 0;
+    public static final Rotation2d BOTTOM_ARM_ANGLE = Rotation2d.fromRadians(0);
+    public static final Rotation2d BOTTOM_ARM_EXTENSION = Rotation2d.fromRadians(0);
+    public static final Rotation2d BOTTOM_INTAKE_ANGLE = Rotation2d.fromRadians(0);
 
-    public static final double MIDDLE_ARM_ANGLE = 0;
-    public static final double MIDDLE_ARM_EXTENSION = 0;
-    public static final double MIDDLE_INTAKE_ANGLE = 0;
+    public static final Rotation2d MIDDLE_ARM_ANGLE = Rotation2d.fromRadians(0);
+    public static final Rotation2d MIDDLE_ARM_EXTENSION = Rotation2d.fromRadians(0);
+    public static final Rotation2d MIDDLE_INTAKE_ANGLE = Rotation2d.fromRadians(0);
 
-    public static final double TOP_ARM_ANGLE = 0;
-    public static final double TOP_ARM_EXTENSION = 0;
-    public static final double TOP_INTAKE_ANGLE = 0;
+    public static final Rotation2d TOP_ARM_ANGLE = Rotation2d.fromRadians(0);
+    public static final Rotation2d TOP_ARM_EXTENSION = Rotation2d.fromRadians(0);
+    public static final Rotation2d TOP_INTAKE_ANGLE = Rotation2d.fromRadians(0);
 
-    public static final double SUBSATION_ARM_ANGLE = 0;
-    public static final double SUBSTATION_ARM_EXTENSION = 0;
-    public static final double SUBSTATION_INTAKE_ANGLE = 0;
+    public static final Rotation2d SUBSATION_ARM_ANGLE = Rotation2d.fromRadians(0);
+    public static final Rotation2d SUBSTATION_ARM_EXTENSION = Rotation2d.fromRadians(0);
+    public static final Rotation2d SUBSTATION_INTAKE_ANGLE = Rotation2d.fromRadians(0);
 
-    public static final double AUTO_ZERO_ARM_ANGLE = 0;
-    public static final double AUTO_ZERO_ARM_EXTENSION = 0;
-    public static final double AUTO_ZERO_INTAKE_ANGLE = 0;
+    public static final Rotation2d AUTO_ZERO_ARM_ANGLE = Rotation2d.fromRadians(0);
+    public static final Rotation2d AUTO_ZERO_ARM_EXTENSION = Rotation2d.fromRadians(0);
+    public static final Rotation2d AUTO_ZERO_INTAKE_ANGLE = Rotation2d.fromRadians(0);
 
-    public static final double TELEOP_ZERO_ARM_ANGLE = 0;
-    public static final double TELEOP_ZERO_ARM_EXTENSION = 0;
-    public static final double TELEOP_ZERO_INTAKE_ANGLE = 0;
+    public static final Rotation2d TELEOP_ZERO_ARM_ANGLE = Rotation2d.fromRadians(0);
+    public static final Rotation2d TELEOP_ZERO_ARM_EXTENSION = Rotation2d.fromRadians(0);
+    public static final Rotation2d TELEOP_ZERO_INTAKE_ANGLE = Rotation2d.fromRadians(0);
 
     public static final double CONE_INTAKE_OUTPUT = 0;
     public static final double CONE_PLACE_OUTPUT = 0;

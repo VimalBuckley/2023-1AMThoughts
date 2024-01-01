@@ -2,11 +2,13 @@ package frc.robot.hardware;
 
 import com.pathplanner.lib.auto.PIDConstants;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public interface EncodedMotorController {
 	public void setAngularVelocity(double targetAngularVelocity);
 	public double getAngularVelocity();
-	public void setAngle(double targetAngleRadians);
-	public double getAngleRadians();
+	public void setAngle(Rotation2d angle);
+	public Rotation2d getAngle();
 	public void setOutput(double targetPercentOutput);
 	public double getPercentOutput();
 	public boolean hasContinuousRotation();

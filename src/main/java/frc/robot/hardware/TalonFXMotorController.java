@@ -6,6 +6,8 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.pathplanner.lib.auto.PIDConstants;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public class TalonFXMotorController extends TalonFX implements EncodedMotorController {
     private double TICKS_PER_RADIAN = 2048 / Math.PI / 2;
 
@@ -39,13 +41,13 @@ public class TalonFXMotorController extends TalonFX implements EncodedMotorContr
     }
 
     @Override
-    public void setAngle(double targetAngle) {
-        set(ControlMode.MotionMagic, targetAngle * TICKS_PER_RADIAN);
+    public void setAngle(Rotation2d angle) {
+        set(ControlMode.MotionMagic, angle.getRadians() * TICKS_PER_RADIAN);
     }
 
     @Override
-    public double getAngleRadians() {
-        return getSelectedSensorPosition() / TICKS_PER_RADIAN;
+    public Rotation2d getAngle() {
+        return Rotation2d.fromRadians(getSelectedSensorPosition() / TICKS_PER_RADIAN);
     }
 
     @Override
