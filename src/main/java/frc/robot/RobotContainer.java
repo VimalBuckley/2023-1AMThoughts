@@ -52,7 +52,7 @@ public class RobotContainer {
 	public void setupDriveController() {
 		xbox = new CommandXboxController(DRIVER_PORT);
 		swerve.setDefaultCommand(swerve.followControllerCommand(
-			SwerveController.xboxConversion(xbox)
+			SwerveController.fromXbox(xbox)
 		));
 		
 		Trigger switchDriveModeButton = xbox.x();

@@ -12,6 +12,8 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 	public SparkMaxMotorController(int deviceID, MotorType type) {
 		super(deviceID, type);
 		tolerance = new Rotation2d(); // default tolerance to 0
+		enableSoftLimit(SoftLimitDirection.kForward, false);
+		enableSoftLimit(SoftLimitDirection.kReverse, false);
 	}
 
     @Override
@@ -58,13 +60,13 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 	}
 
 	@Override
-	public EncodedMotorController configCurrentLimit(int currentLimit) {
+	public SparkMaxMotorController configCurrentLimit(int currentLimit) {
 		setSmartCurrentLimit(currentLimit);
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController configPID(PIDConstants pid) {
+	public SparkMaxMotorController configPID(PIDConstants pid) {
 		SparkMaxPIDController controller = getPIDController();
 		controller.setP(pid.kP);
 		controller.setI(pid.kI);
@@ -73,39 +75,41 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 	}
 
 	@Override
-	public EncodedMotorController configMinAngle(Rotation2d min) {
+	public SparkMaxMotorController configMinAngle(Rotation2d min) {
+		enableSoftLimit(SoftLimitDirection.kReverse, true);
 		setSoftLimit(SoftLimitDirection.kReverse, (float) min.getRotations());
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController configMaxAngle(Rotation2d max) {
+	public SparkMaxMotorController configMaxAngle(Rotation2d max) {
+		enableSoftLimit(SoftLimitDirection.kForward, true);
 		setSoftLimit(SoftLimitDirection.kForward, (float) max.getRotations());
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController configMinOutput(double minOutput) {
+	public SparkMaxMotorController configMinOutput(double minOutput) {
 		SparkMaxPIDController controller = getPIDController();
 		controller.setOutputRange(minOutput, controller.getOutputMax());
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController configMaxOutput(double maxOutput) {
+	public SparkMaxMotorController configMaxOutput(double maxOutput) {
 		SparkMaxPIDController controller = getPIDController();
 		controller.setOutputRange(controller.getOutputMin(), maxOutput);
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController configInversion(boolean shouldInvert) {
+	public SparkMaxMotorController configInversion(boolean shouldInvert) {
 		setInverted(shouldInvert);
 		return this;
 	}
 
 	@Override
-	public EncodedMotorController configBrakeOnIdle(boolean shouldBreak) {
+	public SparkMaxMotorController configBrakeOnIdle(boolean shouldBreak) {
         setIdleMode(
           shouldBreak
           ? IdleMode.kBrake
@@ -115,7 +119,7 @@ public class SparkMaxMotorController extends CANSparkMax implements EncodedMotor
 	}
 
 	@Override
-	public EncodedMotorController configAngleTolerance(Rotation2d tolerance) {
+	public SparkMaxMotorController configAngleTolerance(Rotation2d tolerance) {
 		this.tolerance = tolerance;
 		return this;
 	}

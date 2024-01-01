@@ -10,7 +10,7 @@ public interface SwerveController {
     public Rotation2d getTargetAngle(SwerveSens sens, Rotation2d currentTarget);
     public double getVelocityScalar();
 
-    public static SwerveController xboxConversion(CommandXboxController xbox){
+    public static SwerveController fromXbox(CommandXboxController xbox){
         return new SwerveController() {
             @Override
             public double getForwardInput() {
