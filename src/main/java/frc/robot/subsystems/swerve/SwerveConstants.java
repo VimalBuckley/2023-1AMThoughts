@@ -13,9 +13,9 @@ public class SwerveConstants {
     public static final double MAX_LINEAR_SPEED_MPS = 5.088;
 
     public static final SwerveModuleConfig MODULE_CONFIG = new SwerveModuleConfig(
-        1 / 5.0, // Drive rotations per motor rotation
-        1 / 6.75, // Angle rotations per motor rotation
-        0.0762 // Wheel diameter in meters
+        1 / 5.0, 
+        1 / 6.75,
+        0.0762
     );
 
     public static enum DriveMode {
@@ -25,10 +25,10 @@ public class SwerveConstants {
     }
 
     public static SwerveSens CONTROLLLER_SENS = new SwerveSens(
-        4, // Max forward sens 
-        4, // Max sideways sens
-        3.5,  // Max rotational sens
-        0.2 // Min sens
+        4,  
+        4, 
+        3.5,
+        0.2 
     );
 
     public static final EncodedMotorController FRONT_LEFT_DRIVE_MOTOR = 

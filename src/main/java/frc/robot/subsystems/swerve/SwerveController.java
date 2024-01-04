@@ -46,16 +46,15 @@ public interface SwerveController {
             @Override
             public Rotation2d getTargetAngle(SwerveSens sens, Rotation2d currentTarget) {
                 if (Math.abs(xbox.getRightY()) > 0.5) {
-                    return Rotation2d.fromDegrees(90 - 90 * Math.signum(-xbox.getRightY()));
+                    return Rotation2d.fromDegrees(90 + 90 * Math.signum(xbox.getRightY()));
                 }
-                return Rotation2d.fromDegrees(currentTarget.getDegrees() -xbox.getRightX() * sens.rotational());
+                return Rotation2d.fromDegrees(currentTarget.getDegrees() - xbox.getRightX() * sens.rotational());
             }
 
             @Override
             public double getVelocityScalar() {
-                return xbox.getLeftTriggerAxis();
+                return 1 - xbox.getLeftTriggerAxis();
             }
-            
         };
     }
 }

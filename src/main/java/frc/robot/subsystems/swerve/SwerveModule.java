@@ -87,6 +87,12 @@ public class SwerveModule {
 		);
 	}
 
+	/**
+	 * A record repressenting configuration values for a swerve module
+	 * @param driveRatio The ratio of drive wheel rotations per drive motor rotation
+	 * @param angleRatio The ratio of module rotations per angle motor rotation
+	 * @param diameterMeters The diameter in meters of the wheel of the module
+	 */
 	public static record SwerveModuleConfig(
         double driveRatio, 
         double angleRatio, 
