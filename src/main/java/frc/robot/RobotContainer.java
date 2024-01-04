@@ -34,11 +34,11 @@ public class RobotContainer {
 	public RobotContainer() {
         DriverStation.silenceJoystickConnectionWarning(true);
 		swerve = Swerve.getInstance();
-		placer = Placer.getInstance();
+		//placer = Placer.getInstance();
 		messaging = Messaging.getInstance();
 		setupAuto();
 		setupDriveController();
-		setupOperatorController();
+		//setupOperatorController();
 	}
 
 	public void setupAuto() {

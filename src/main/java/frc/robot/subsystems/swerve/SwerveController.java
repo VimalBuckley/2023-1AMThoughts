@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /** An interface representing a controller which can control swerve during teleop */
 public interface SwerveController {
-    /** This should return a number between 0 and 1 representing how
+    /** This should return a number between -1 and 1 representing how
      * fast foward we want to go. Forward is positive */
     public double getForwardInput();
-    /** This should return a number between 0 and 1 representing how
+    /** This should return a number between -1 and 1 representing how
      * fast sideways we want to go. Left is positive */
     public double getSidewaysInput();
-    /** This should return a number between 0 and 1 representing how
+    /** This should return a number between -1 and 1 representing how
      * fast we want to turn. Counter-clockwise is positive */
     public double getRotationalInput();
     /**
